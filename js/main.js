@@ -2,6 +2,11 @@ import { facturas } from "../datos/facturas.js";
 
 const getIva = (porcentajeIVA, base) => (porcentajeIVA / 100) * base;
 const parsearFecha = (timestamp) => new Date(timestamp).toLocaleDateString();
+const total = (base, iva) => base + iva;
+const colorFondo = (celda, boolean) =>
+  boolean
+    ? celda.classList.add("table-success")
+    : celda.classList.add("table-danger");
 const listaFacturas = document.querySelector(".lista-facturas");
 const pintarFacturaTabla = () => {
     for (const { numero, fecha, concepto }
