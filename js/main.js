@@ -14,7 +14,8 @@ const vence = (celda, vencimiento, abonada) => {
     colorFondo(celda, abonada);
   } else {
     celda.textContent = vencimiento.toLocaleString();
-    if (vencimiento < Date.getTime()) {
+    const fecha = new Date();
+    if (vencimiento < fecha.getTime()) {
       celda.textContent = compararFechas();
       colorFondo(celda, false);
     } else {
