@@ -1,6 +1,6 @@
 const getIva = (porcentajeIVA, base) => (porcentajeIVA / 100) * base;
 const total = (base, iva) => base + iva;
-const estado = (estado, abonada) =>
-  abonada
-    ? estado.classList.add("table-success")
-    : estado.classList.add("table-danger");
+const colorFondo = (celda, boolean) =>
+  boolean
+    ? celda.classList.add("table-success")
+    : celda.classList.add("table-danger");
