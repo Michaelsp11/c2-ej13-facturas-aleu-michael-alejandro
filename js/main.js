@@ -5,24 +5,24 @@ const parsearFecha = (timestamp) => new Date(timestamp).toLocaleDateString();
 const total = (base, iva) => base + iva;
 const compararFechas = () => true;
 const colorFondo = (celda, boolean) =>
-  boolean
-    ? celda.classList.add("table-success")
-    : celda.classList.add("table-danger");
+    boolean ?
+    celda.classList.add("table-success") :
+    celda.classList.add("table-danger");
 
 const vence = (celda, vencimiento, abonada, callback) => {
-  if (abonada) {
-    celda.textContent = "-";
-    callback(celda, abonada);
-  } else {
-    celda.textContent = vencimiento.toLocaleString();
-    if (vencimiento < Date.getTime()) {
-      celda.textContent = compararFechas();
-      callback(celda, false);
+    if (abonada) {
+        celda.textContent = "-";
+        callback(celda, abonada);
     } else {
-      celda.textContent = compararFechas();
-      callback(celda, true);
+        celda.textContent = vencimiento.toLocaleString();
+        if (vencimiento < Date.getTime()) {
+            celda.textContent = compararFechas();
+            callback(celda, false);
+        } else {
+            celda.textContent = compararFechas();
+            callback(celda, true);
+        }
     }
-  }
 };
 const listaFacturas = document.querySelector(".lista-facturas");
 const pintarFacturaTabla = () => {
@@ -46,11 +46,30 @@ const pintarFacturaTabla = () => {
 };
 const pintarTotalBase = () => {
     const totalBase = document.querySelector(".total-base");
-    totalBase.textContent = facturas.reduce(
-        (acumulador, { base }) => acumulador + base,
-        0
-    );
+    totalBase.textContent = `${facturas
+    .reduce((acumulador, { base }) => acumulador + base, 0)
+    .toFixed(0)}€`;
+};
+const pintarTotalIVA = () => {
+    const totalIVA = document.querySelector(".total-iva");
+    totalIVA.textContent = `${facturas
+    .reduce(
+      (acumulador, { base, tipoIva }) => acumulador + getIva(base, tipoIva),
+      0
+    )
+    .toFixed(0)}€`;
+};
+const pintarTotalBaseIVA = () => {
+    const totalFinal = document.querySelector(".total-final-base-iva");
+    totalFinal.textContent = `${facturas
+    .reduce(
+      (acumulador, { base, tipoIva }) =>
+        acumulador + base + getIva(base, tipoIva),
+      0
+    )
+    .toFixed(0)}€`;
 };
 pintarFacturaTabla();
 pintarTotalBase();
-
+pintarTotalIVA();
+pintarTotalBaseIVA();
