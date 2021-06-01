@@ -24,10 +24,9 @@ const vence = (celda, vencimiento, abonada, callback) => {
     }
   }
 };
-
 const listaFacturas = document.querySelector(".lista-facturas");
 const pintarFacturaTabla = () => {
-    for (const { numero, fecha, concepto }
+    for (const { numero, fecha, concepto, base }
         of facturas) {
         const nuevaFactura = document
             .querySelector(".factura-molde")
@@ -40,8 +39,18 @@ const pintarFacturaTabla = () => {
         fechaFactura.textContent = parsearFecha(fecha);
         const conceptoFactura = nuevaFactura.querySelector(".concepto");
         conceptoFactura.textContent = concepto;
-        listaFacturas.append(nuevaFactura);
+        const baseFactura = nuevaFactura.querySelector(".base");
+        baseFactura.textContent = base;
+        const totalBaseFactura = listaFacturas.append(nuevaFactura);
     }
 };
+const pintarTotalBase = () => {
+    const totalBase = document.querySelector(".total-base");
+    totalBase.textContent = facturas.reduce(
+        (acumulador, { base }) => acumulador + base,
+        0
+    );
+};
 pintarFacturaTabla();
+pintarTotalBase();
 
