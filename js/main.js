@@ -9,9 +9,15 @@ const colorFondo = (celda, boolean) =>
     celda.classList.add("table-success") :
     celda.classList.add("table-danger");
 const vence = (celda, vencimiento, abonada) => {
-    if (abonada) {
-        celda.textContent = "-";
-        colorFondo(celda, abonada);
+  if (abonada) {
+    celda.textContent = "-";
+    colorFondo(celda, abonada);
+  } else {
+    celda.textContent = vencimiento.toLocaleString();
+    const fecha = new Date();
+    if (vencimiento < fecha.getTime()) {
+      celda.textContent = compararFechas();
+      colorFondo(celda, false);
     } else {
         celda.textContent = vencimiento.toLocaleString();
         if (vencimiento < Date.getTime()) {
@@ -22,44 +28,45 @@ const vence = (celda, vencimiento, abonada) => {
             colorFondo(celda, true);
         }
     }
+  }
 };
+
 const listaFacturas = document.querySelector(".lista-facturas");
 const pintarFacturaTabla = () => {
-    for (const {
-            numero,
-            fecha,
-            concepto,
-            base,
-            tipoIva,
-            abonada,
-            vencimiento,
-        }
-        of facturas) {
-        const nuevaFactura = document
-            .querySelector(".factura-molde")
-            .cloneNode(true);
-        nuevaFactura.classList.remove("factura-molde");
-        nuevaFactura.classList.remove("d-none");
-        const numeroFactura = nuevaFactura.querySelector(".numero");
-        numeroFactura.textContent = numero;
-        const fechaFactura = nuevaFactura.querySelector(".fecha");
-        fechaFactura.textContent = parsearFecha(fecha);
-        const conceptoFactura = nuevaFactura.querySelector(".concepto");
-        conceptoFactura.textContent = concepto;
-        const baseFactura = nuevaFactura.querySelector(".base");
-        baseFactura.textContent = base;
-        const ivaFactura = nuevaFactura.querySelector(".iva");
-        const ivaCalculado = getIva(tipoIva, base);
-        ivaFactura.textContent = ivaCalculado;
-        const totalFactura = nuevaFactura.querySelector(".total-base-iva");
-        totalFactura.textContent = total(base, ivaCalculado);
-        const estadoFactura = nuevaFactura.querySelector(".estado");
-        estadoFactura.textContent = abonada ? "Abonada" : "Pendiente";
-        colorFondo(estadoFactura, abonada);
-        const venceFactura = nuevaFactura.querySelector(".vence");
-        vence(venceFactura, vencimiento, abonada);
-        listaFacturas.append(nuevaFactura);
-    }
+  for (const {
+    numero,
+    fecha,
+    concepto,
+    base,
+    tipoIva,
+    abonada,
+    vencimiento,
+  } of facturas) {
+    const nuevaFactura = document
+      .querySelector(".factura-molde")
+      .cloneNode(true);
+    nuevaFactura.classList.remove("factura-molde");
+    nuevaFactura.classList.remove("d-none");
+    const numeroFactura = nuevaFactura.querySelector(".numero");
+    numeroFactura.textContent = numero;
+    const fechaFactura = nuevaFactura.querySelector(".fecha");
+    fechaFactura.textContent = parsearFecha(fecha);
+    const conceptoFactura = nuevaFactura.querySelector(".concepto");
+    conceptoFactura.textContent = concepto;
+    const baseFactura = nuevaFactura.querySelector(".base");
+    baseFactura.textContent = base;
+    const ivaFactura = nuevaFactura.querySelector(".iva");
+    const ivaCalculado = getIva(tipoIva, base);
+    ivaFactura.textContent = ivaCalculado;
+    const totalFactura = nuevaFactura.querySelector(".total-base-iva");
+    totalFactura.textContent = total(base, ivaCalculado);
+    const estadoFactura = nuevaFactura.querySelector(".estado");
+    estadoFactura.textContent = abonada ? "Abonada" : "Pendiente";
+    colorFondo(estadoFactura, abonada);
+    const venceFactura = nuevaFactura.querySelector(".vence");
+    vence(venceFactura, vencimiento, abonada);
+    const totalBaseFactura = listaFacturas.append(nuevaFactura);
+  }
 };
 const pintarTotalBase = () => {
     const totalBase = document.querySelector(".total-base");
@@ -67,6 +74,7 @@ const pintarTotalBase = () => {
     .reduce((acumulador, { base }) => acumulador + base, 0)
     .toFixed(0)}€`;
 };
+
 const pintarTotalIVA = () => {
     const totalIVA = document.querySelector(".total-iva");
     totalIVA.textContent = `${facturas
